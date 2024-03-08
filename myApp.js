@@ -1,3 +1,4 @@
+let bodyParser = require("body-parser");
 require("dotenv").config();
 let express = require("express");
 let app = express();
@@ -7,9 +8,12 @@ app.use((req, res, next) => {
   console.log(`${req.method} ${req.path} - ${req.ip}`);
   next();
 });
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
+
 app.get("/json", (req, res) => {
   let msg = "Hello json";
 
@@ -33,6 +37,18 @@ app.get(
 app.get("/:word/echo", (req, res) => {
   res.json({
     echo: req.params.word,
+  });
+});
+
+app.get("/name", (req, res) => {
+  res.json({
+    name: `${req.query.first} ${req.query.last}`,
+  });
+});
+
+app.post("/name", (req, res) => {
+  res.json({
+    name: `${req.body.first} ${req.body.last}`,
   });
 });
 
